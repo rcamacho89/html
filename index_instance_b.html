@@ -1,34 +1,40 @@
 <!DOCTYPE html>
-
 <html lang="en">
-	<head>
-        <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-        <script src="api_nasa.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">		<meta charset="UTF-8" />
-		<meta name="viewport"
-			content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
-	</head>
-	<body>
-		
-        <div class="container">
-          <div class="row">  
-            <h1 class="text-center"><FONT COLOR=red>Nasa APOD - Instance-B</FONT></h1>
-            <h6 class="js-explanation"></h6>
-            
-            <span class="clearfix">
-                Data: <span class="js-date"></span>
-            </span>
-
-            <img class="clearfix" src="https://apod.nasa.gov/apod/image/2301/jwst-ngc346.png" width="400" height="600" /> 
-
-            <div class="clearfix"></div>
-            <br  /><br  />
-            <h2 class="text-center js-title clearfix"></h2>
-            <br  /><br  />
-
-            <img class="clearfix" src="https://apod.nasa.gov/apod/image/2301/jwst-ngc346-800.png" width="400" height="600" /> 
-          </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nasa APOD - Imagem do Dia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center"><FONT COLOR=red>NASA Astronomy Picture of the Day  - Instance B</FONT></h1>
+        <div id="apod-container" class="text-center">
+            <!-- A imagem e informações aparecerão aqui -->
         </div>
-	</body>
+    </div>
+    <script>
+        $(document).ready(function() {
+            const today = new Date().toISOString().split('T')[0];
+            $.ajax({
+                url: `https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=${today}`,
+                type: 'GET',
+                success: function(data) {
+                    const imgSrc = data.hdurl || data.url;
+                    const content = `
+                        <h2>${data.title || "Sem Título"}</h2>
+                        <p>${data.explanation}</p>
+                        <span>Data: ${data.date}</span>
+                        <img class="img-fluid" src="${imgSrc}" alt="${data.title}" />
+                    `;
+                    $("#apod-container").append(content);
+                },
+                error: function() {
+                    console.log("Erro ao buscar dados");
+                }
+            });
+        });
+    </script>
+</body>
 </html>
